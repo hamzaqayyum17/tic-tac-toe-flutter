@@ -1,9 +1,15 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 
 class GameScreen extends StatefulWidget {
   final bool isSinglePlayer;
+  final bool isHard;
 
-  const GameScreen({super.key, required this.isSinglePlayer});
+  const GameScreen({
+    super.key,
+    required this.isSinglePlayer,
+    this.isHard = false,
+  });
 
   @override
   State<GameScreen> createState() => _GameScreenState();
@@ -99,7 +105,9 @@ class _GameScreenState extends State<GameScreen> {
     }
 
     // Simple AI: choose the first available empty cell.
-    final computerIndex = findBestMove();
+final computerIndex = widget.isHard
+    ? findBestMove()
+    : findEasyMove();
 
     setState(() {
       board[computerIndex] = 'O';
@@ -127,62 +135,32 @@ class _GameScreenState extends State<GameScreen> {
       currentPlayer = 'X';
     });
   }
+int findEasyMove() {
+  final random = Random();
 
-  int findBestMove() {
-    // 1. Check if computer can win.
-    for (int i = 0; i < board.length; i++) {
-      if (board[i].isEmpty) {
-        board[i] = 'O';
+  final emptyCells = <int>[];
 
-        if (checkWinner('O')) {
-          board[i] = '';
-          return i;
-        }
-
-        board[i] = '';
-      }
+  for (int i = 0; i < board.length; i++) {
+    if (board[i].isEmpty) {
+      emptyCells.add(i);
     }
-
-    // 2. Check if player can win, then block player.
-    for (int i = 0; i < board.length; i++) {
-      if (board[i].isEmpty) {
-        board[i] = 'X';
-
-        if (checkWinner('X')) {
-          board[i] = '';
-          return i;
-        }
-
-        board[i] = '';
-      }
-    }
-
-    // 3. Choose center.
-    if (board[4].isEmpty) {
-      return 4;
-    }
-
-    // 4. Choose a corner.
-    const corners = [0, 2, 6, 8];
-
-    for (final corner in corners) {
-      if (board[corner].isEmpty) {
-        return corner;
-      }
-    }
-
-    // 5. Choose any available cell.
-    for (int i = 0; i < board.length; i++) {
-      if (board[i].isEmpty) {
-        return i;
-      }
-    }
-
-    // Fallback.
-    return 0;
   }
 
+  return emptyCells[random.nextInt(emptyCells.length)];
+}
+int findBestMove() {
+  final random = Random();
 
+  final emptyCells = <int>[];
+
+  for (int i = 0; i < board.length; i++) {
+    if (board[i].isEmpty) {
+      emptyCells.add(i);
+    }
+  }
+
+  return emptyCells[random.nextInt(emptyCells.length)];
+}
   // Check winning combinations.
   bool checkWinner(String player) {
     const winningCombinations = [
@@ -371,7 +349,6 @@ class _GameScreenState extends State<GameScreen> {
 
             const SizedBox(height: 24),
 
-            // Restart button.
             // Restart button.
             SizedBox(
               width: double.infinity,
