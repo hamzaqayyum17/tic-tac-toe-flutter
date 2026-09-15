@@ -1,17 +1,34 @@
-# tic_tac_toe
+# Tic Tac Toe Flutter Game
 
-A new Flutter project.
+A Tic Tac Toe game developed using Flutter.
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+- Single Player Mode
+- Two Player Mode
+- X and O turns
+- Computer AI
+- Scoreboard
+- Draw counter
+- Restart game
+- Game rules screen
+- Dark user interface
 
-A few resources to get you started if this is your first Flutter project:
+## Technologies
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+- Flutter
+- Dart
+- Material Design
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Project Structure
+
+```text
+lib/
+├── main.dart
+├── screens/
+│   ├── home_screen.dart
+│   ├── game_screen.dart
+│   └── rules_screen.dart
+├── models/
+├── services/
+└── widgets/
