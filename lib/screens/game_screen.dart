@@ -182,6 +182,7 @@ class _GameScreenState extends State<GameScreen> {
     return 0;
   }
 
+
   // Check winning combinations.
   bool checkWinner(String player) {
     const winningCombinations = [
