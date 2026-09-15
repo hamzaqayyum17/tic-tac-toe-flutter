@@ -13,9 +13,7 @@ class TicTacToeApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Tic Tac Toe',
-      theme: ThemeData(
-        useMaterial3: true,
-      ),
+      theme: ThemeData.dark(),
       home: const HomeScreen(),
     );
   }

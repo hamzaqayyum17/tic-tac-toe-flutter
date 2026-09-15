@@ -9,7 +9,9 @@ class HomeScreen extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => GameScreen(isSinglePlayer: isSinglePlayer),
+        builder: (context) => GameScreen(
+          isSinglePlayer: isSinglePlayer,
+        ),
       ),
     );
   }
@@ -41,7 +43,6 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF111827),
-
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
@@ -49,14 +50,17 @@ class HomeScreen extends StatelessWidget {
             children: [
               const SizedBox(height: 35),
 
-              // App icon.
+              // App icon
               Container(
                 width: 90,
                 height: 90,
                 decoration: BoxDecoration(
                   color: const Color(0xFF1F2937),
                   borderRadius: BorderRadius.circular(24),
-                  border: Border.all(color: const Color(0xFF60A5FA), width: 2),
+                  border: Border.all(
+                    color: const Color(0xFF60A5FA),
+                    width: 2,
+                  ),
                 ),
                 child: const Center(
                   child: Text(
@@ -86,12 +90,15 @@ class HomeScreen extends StatelessWidget {
               const Text(
                 'Challenge your mind and enjoy the game!',
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.white70, fontSize: 16),
+                style: TextStyle(
+                  color: Colors.white70,
+                  fontSize: 16,
+                ),
               ),
 
               const SizedBox(height: 45),
 
-              // Single Player card.
+              // Single Player card
               _gameModeCard(
                 context: context,
                 title: 'Single Player',
@@ -105,7 +112,7 @@ class HomeScreen extends StatelessWidget {
 
               const SizedBox(height: 18),
 
-              // Two Player card.
+              // Two Players card
               _gameModeCard(
                 context: context,
                 title: 'Two Players',
@@ -119,7 +126,7 @@ class HomeScreen extends StatelessWidget {
 
               const SizedBox(height: 30),
 
-              // About button.
+              // About button
               SizedBox(
                 width: double.infinity,
                 height: 52,
@@ -130,11 +137,16 @@ class HomeScreen extends StatelessWidget {
                   icon: const Icon(Icons.info_outline),
                   label: const Text(
                     'About Game',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: Colors.white,
-                    side: const BorderSide(color: Colors.white38),
+                    side: const BorderSide(
+                      color: Colors.white38,
+                    ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14),
                     ),
@@ -144,6 +156,7 @@ class HomeScreen extends StatelessWidget {
 
               const SizedBox(height: 14),
 
+              // How to Play button
               SizedBox(
                 width: double.infinity,
                 height: 52,
@@ -159,22 +172,31 @@ class HomeScreen extends StatelessWidget {
                   icon: const Icon(Icons.menu_book),
                   label: const Text(
                     'How to Play',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: Colors.white,
-                    side: const BorderSide(color: Colors.white38),
+                    side: const BorderSide(
+                      color: Colors.white38,
+                    ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14),
                     ),
                   ),
                 ),
               ),
+
               const SizedBox(height: 25),
 
               const Text(
                 'Have fun playing!',
-                style: TextStyle(color: Colors.white54, fontSize: 14),
+                style: TextStyle(
+                  color: Colors.white54,
+                  fontSize: 14,
+                ),
               ),
             ],
           ),
@@ -196,7 +218,9 @@ class HomeScreen extends StatelessWidget {
       child: Card(
         color: const Color(0xFF1F2937),
         elevation: 4,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18),
+        ),
         child: InkWell(
           borderRadius: BorderRadius.circular(18),
           onTap: onTap,
@@ -211,7 +235,11 @@ class HomeScreen extends StatelessWidget {
                     color: color,
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  child: Icon(icon, color: Colors.white, size: 30),
+                  child: Icon(
+                    icon,
+                    color: Colors.white,
+                    size: 30,
+                  ),
                 ),
 
                 const SizedBox(width: 18),
