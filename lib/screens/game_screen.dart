@@ -105,9 +105,7 @@ class _GameScreenState extends State<GameScreen> {
     }
 
     // Simple AI: choose the first available empty cell.
-final computerIndex = widget.isHard
-    ? findBestMove()
-    : findEasyMove();
+    final computerIndex = widget.isHard ? findBestMove() : findEasyMove();
 
     setState(() {
       board[computerIndex] = 'O';
@@ -135,32 +133,102 @@ final computerIndex = widget.isHard
       currentPlayer = 'X';
     });
   }
-int findEasyMove() {
-  final random = Random();
 
-  final emptyCells = <int>[];
+  int findEasyMove() {
+    final random = Random();
 
-  for (int i = 0; i < board.length; i++) {
-    if (board[i].isEmpty) {
-      emptyCells.add(i);
+    final emptyCells = <int>[];
+
+    for (int i = 0; i < board.length; i++) {
+      if (board[i].isEmpty) {
+        emptyCells.add(i);
+      }
     }
+
+    return emptyCells[random.nextInt(emptyCells.length)];
   }
 
-  return emptyCells[random.nextInt(emptyCells.length)];
-}
-int findBestMove() {
-  final random = Random();
+  int findBestMove() {
+    int bestScore = -1000;
+    int bestMove = -1;
 
-  final emptyCells = <int>[];
+    for (int i = 0; i < board.length; i++) {
+      if (board[i].isEmpty) {
+        // Computer O ka move try karo
+        board[i] = 'O';
 
-  for (int i = 0; i < board.length; i++) {
-    if (board[i].isEmpty) {
-      emptyCells.add(i);
+        final score = minimax(depth: 0, isMaximizing: false);
+
+        // Move undo karo
+        board[i] = '';
+
+        if (score > bestScore) {
+          bestScore = score;
+          bestMove = i;
+        }
+      }
     }
+
+    return bestMove;
   }
 
-  return emptyCells[random.nextInt(emptyCells.length)];
-}
+  int minimax({required int depth, required bool isMaximizing}) {
+    // Computer O wins
+    if (checkWinner('O')) {
+      return 10 - depth;
+    }
+
+    // Player X wins
+    if (checkWinner('X')) {
+      return depth - 10;
+    }
+
+    // Draw
+    if (!board.contains('')) {
+      return 0;
+    }
+
+    // Computer's turn - maximize score
+    if (isMaximizing) {
+      int bestScore = -1000;
+
+      for (int i = 0; i < board.length; i++) {
+        if (board[i].isEmpty) {
+          // Try O move
+          board[i] = 'O';
+
+          final score = minimax(depth: depth + 1, isMaximizing: false);
+
+          // Undo move
+          board[i] = '';
+
+          bestScore = max(bestScore, score);
+        }
+      }
+
+      return bestScore;
+    }
+
+    // Player's turn - minimize score
+    int bestScore = 1000;
+
+    for (int i = 0; i < board.length; i++) {
+      if (board[i].isEmpty) {
+        // Try X move
+        board[i] = 'X';
+
+        final score = minimax(depth: depth + 1, isMaximizing: true);
+
+        // Undo move
+        board[i] = '';
+
+        bestScore = min(bestScore, score);
+      }
+    }
+
+    return bestScore;
+  }
+
   // Check winning combinations.
   bool checkWinner(String player) {
     const winningCombinations = [
