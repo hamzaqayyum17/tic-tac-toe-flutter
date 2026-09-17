@@ -308,138 +308,191 @@ class _GameScreenState extends State<GameScreen> {
       appBar: AppBar(
         backgroundColor: const Color(0xFF111827),
         foregroundColor: Colors.white,
+        elevation: 0,
         title: Text(widget.isSinglePlayer ? 'Single Player' : 'Two Players'),
       ),
 
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final screenWidth = constraints.maxWidth;
 
-        child: Column(
-          children: [
-            const SizedBox(height: 30),
+            // Mobile aur web dono ke liye responsive padding.
+            final horizontalPadding = screenWidth < 400 ? 12.0 : 20.0;
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _scoreCard(
-                  title: 'Player X',
-                  score: xScore,
-                  color: const Color(0xFF60A5FA),
-                ),
+            // Board screen ke available width ke according hoga.
+            // Web par maximum 360px se zyada nahi hoga.
+            final boardSize = min(360.0, screenWidth - (horizontalPadding * 2));
 
-                _scoreCard(
-                  title: 'Draws',
-                  score: drawScore,
-                  color: Colors.white,
-                ),
-
-                _scoreCard(
-                  title: widget.isSinglePlayer ? 'Computer' : 'Player O',
-                  score: oScore,
-                  color: const Color(0xFFFBBF24),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 30),
-
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              decoration: BoxDecoration(
-                color: currentPlayer == 'X'
-                    ? const Color(0xFF1D4ED8)
-                    : const Color(0xFFB45309),
-                borderRadius: BorderRadius.circular(30),
+            return SingleChildScrollView(
+              padding: EdgeInsets.symmetric(
+                horizontal: horizontalPadding,
+                vertical: 16,
               ),
-              child: Text(
-                computerThinking
-                    ? 'Computer Thinking...'
-                    : 'Player $currentPlayer Turn',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            const SizedBox(height: 40),
+              child: Column(
+                children: [
+                  const SizedBox(height: 5),
 
-            // Tic Tac Toe board.
-            Expanded(
-              child: GridView.builder(
-                itemCount: 9,
-
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                ),
-
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      makeMove(index);
-                    },
-
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 200),
-                      decoration: BoxDecoration(
-                        color: board[index].isEmpty
-                            ? const Color(0xFF1F2937)
-                            : const Color(0xFF374151),
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: board[index] == 'X'
-                              ? const Color(0xFF60A5FA)
-                              : board[index] == 'O'
-                              ? const Color(0xFFFBBF24)
-                              : Colors.transparent,
-                          width: 2,
+                  // Scoreboard
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _scoreCard(
+                          title: 'Player X',
+                          score: xScore,
+                          color: const Color(0xFF60A5FA),
                         ),
                       ),
-                      child: Center(
-                        child: Text(
-                          board[index],
-                          style: TextStyle(
-                            color: board[index] == 'X'
-                                ? const Color(0xFF60A5FA)
-                                : const Color(0xFFFBBF24),
-                            fontSize: 52,
-                            fontWeight: FontWeight.bold,
+
+                      SizedBox(width: screenWidth < 400 ? 6 : 10),
+
+                      Expanded(
+                        child: _scoreCard(
+                          title: 'Draws',
+                          score: drawScore,
+                          color: Colors.white,
+                        ),
+                      ),
+
+                      SizedBox(width: screenWidth < 400 ? 6 : 10),
+
+                      Expanded(
+                        child: _scoreCard(
+                          title: widget.isSinglePlayer
+                              ? 'Computer'
+                              : 'Player O',
+                          score: oScore,
+                          color: const Color(0xFFFBBF24),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 22),
+
+                  // Current turn indicator
+                  Container(
+                    constraints: BoxConstraints(
+                      maxWidth: screenWidth < 400 ? 260 : 320,
+                    ),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: screenWidth < 400 ? 16 : 22,
+                      vertical: screenWidth < 400 ? 11 : 13,
+                    ),
+                    decoration: BoxDecoration(
+                      color: currentPlayer == 'X'
+                          ? const Color(0xFF1D4ED8)
+                          : const Color(0xFFB45309),
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: Text(
+                      computerThinking
+                          ? 'Computer Thinking...'
+                          : 'Player $currentPlayer Turn',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: screenWidth < 400 ? 17 : 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 24),
+
+                  // Responsive board
+                  SizedBox(
+                    width: boardSize,
+                    height: boardSize,
+                    child: GridView.builder(
+                      itemCount: 9,
+                      physics: const NeverScrollableScrollPhysics(),
+                      padding: EdgeInsets.zero,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            crossAxisSpacing: 8,
+                            mainAxisSpacing: 8,
                           ),
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            makeMove(index);
+                          },
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            decoration: BoxDecoration(
+                              color: board[index].isEmpty
+                                  ? const Color(0xFF1F2937)
+                                  : const Color(0xFF374151),
+                              borderRadius: BorderRadius.circular(
+                                screenWidth < 400 ? 12 : 16,
+                              ),
+                              border: Border.all(
+                                color: board[index] == 'X'
+                                    ? const Color(0xFF60A5FA)
+                                    : board[index] == 'O'
+                                    ? const Color(0xFFFBBF24)
+                                    : Colors.transparent,
+                                width: 2,
+                              ),
+                            ),
+                            child: Center(
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(
+                                  board[index],
+                                  style: TextStyle(
+                                    color: board[index] == 'X'
+                                        ? const Color(0xFF60A5FA)
+                                        : const Color(0xFFFBBF24),
+                                    fontSize: screenWidth < 400 ? 48 : 58,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+
+                  const SizedBox(height: 24),
+
+                  // Restart button
+                  SizedBox(
+                    width: double.infinity,
+                    height: screenWidth < 400 ? 52 : 58,
+                    child: ElevatedButton.icon(
+                      onPressed: restartGame,
+                      icon: Icon(
+                        Icons.refresh,
+                        size: screenWidth < 400 ? 22 : 26,
+                      ),
+                      label: Text(
+                        'Restart Game',
+                        style: TextStyle(
+                          fontSize: screenWidth < 400 ? 17 : 19,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF2563EB),
+                        foregroundColor: Colors.white,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
                         ),
                       ),
                     ),
-                  );
-                },
-              ),
-            ),
-
-            const SizedBox(height: 24),
-
-            // Restart button.
-            SizedBox(
-              width: double.infinity,
-              height: 55,
-              child: ElevatedButton.icon(
-                onPressed: restartGame,
-                icon: const Icon(Icons.refresh),
-                label: const Text(
-                  'Restart Game',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF2563EB),
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
                   ),
-                ),
-              ),
-            ),
 
-            const SizedBox(height: 20),
-          ],
+                  const SizedBox(height: 12),
+                ],
+              ),
+            );
+          },
         ),
       ),
     );
